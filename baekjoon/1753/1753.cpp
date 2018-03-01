@@ -61,8 +61,8 @@ void DA(int K) {
 		}
 
 		for (int i = 0; i < adj[_end].size(); i++) {
-			int dest = adj[_end][i].first;		// 목적 Point
-			int dis = adj[_end][i].second;		// _end -> i 까지의 거리
+			int dest = adj[_end][i].first;		// Destination
+			int dis = adj[_end][i].second;		// Distance to '_end -> i'
 
 			if (d[dest] > d[_end] + dis) {
 				d[dest] = d[_end] + dis;
