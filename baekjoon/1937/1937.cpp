@@ -6,7 +6,8 @@ using namespace std;
 // Memorization
 
 int n;
-vector <vector< pair<int, int>>> v;
+vector <int> v[502];
+int dp[502][502] = { 0, };
 int dx[] = { -1,0,1,0 };
 int dy[] = { 0,-1,0,1 };
 
@@ -14,30 +15,18 @@ int func(int x, int y);
 
 int main() {
 	cin >> n;
-
-	for (int i = 0; i < n; i++) {
-		vector <pair<int, int>> tmp;
-		for (int j = 0; j < n; j++) {
-			int t;
-			cin >> t;
-			tmp.push_back({ t,0 });
-		}
-		v.push_back(tmp);
-	}
-
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			v[i][j].second = func(i, j);
-		}
-	}
-
 	int MAX = 0;
 
+	for (int i = 0; i < n*n; i++) {
+		int t;
+		cin >> t;
+		v[i / n].push_back(t);
+	}
+
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			if (v[i][j].second > MAX) {
-				MAX = v[i][j].second;
-			}
+			int t = func(i, j);
+			MAX = MAX > t ? MAX : t;
 		}
 	}
 	/*
@@ -54,67 +43,21 @@ int main() {
 }
 
 int func(int x, int y) {
-	queue<pair<pair<int, int>, int>> q;
-	q.push({ { x, y }, 1 });
+	if (dp[x][y] != 0)
+		return dp[x][y];
 
-	int MAX = 0;
+	dp[x][y] = 1;
 
-	while (!q.empty()) {
-		int _x = q.front().first.first, _y = q.front().first.second, val = q.front().second;
-		q.pop();
+	for (int i = 0; i < 4; i++) {
+		int nx = x + dx[i], ny = y + dy[i];
 
-		for (int i = 0; i < 4; i++) {
-			if (_x == -1)
-				continue;
-			else if (_x + dx[i] >= 0 && _x + dx[i] < n && _y + dy[i] >= 0 && _y + dy[i] < n) {
-				if (v[_x][_y].first < v[_x + dx[i]][_y + dy[i]].first) {
-					if (v[_x + dx[i]][_y + dy[i]].second != 0) {
-						q.push({ { -1, -1 }, val + v[_x + dx[i]][_y + dy[i]].second });
-					}
-					else {
-						q.push({ { _x + dx[i], _y + dy[i] }, val + 1 });
-					}
-				}
+		if (nx >= 0 && nx < n && ny >= 0 && ny < n) {
+			if (v[x][y] < v[nx][ny]) {
+				int t = func(nx, ny) + 1;
+				dp[x][y] = dp[x][y] > t ? dp[x][y] : t;
 			}
 		}
-		if (MAX < val)
-			MAX = val;
 	}
 
-	return MAX;
-	/*
-	int check = 0;
-
-	if (v[x][y].second != 0)
-		return v[x][y].second;
-
-	int a = 0, b = 0, c = 0, d = 0;
-	//queue
-
-	if (x > 0 && v[x][y].first < v[x - 1][y].first) {
-		a = func(x - 1, y);
-		check = 1;
-	}
-	if (y > 0 && v[x][y].first < v[x][y - 1].first) {
-		b = func(x, y - 1);
-		check = 1;
-	}
-	if (x < n - 1 && v[x][y].first < v[x + 1][y].first) {
-		c = func(x + 1, y);
-		check = 1;
-	}
-	if (y < n - 1 && v[x][y].first < v[x][y + 1].first) {
-		d = func(x, y + 1);
-		check = 1;
-	}
-
-	if (!check) {
-		return 1;
-	}
-
-	a = a > b ? a : b;
-	c = c > d ? c : d;
-
-	return a > c ? a + 1 : c + 1;
-	*/
+	return dp[x][y];
 }
