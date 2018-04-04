@@ -9,6 +9,7 @@ dp : 1937
 TSP : 10971
 stack : 2493
 최소 스패닝 트리 : 1197 (Prim / Cuskal)
+링크드 리스트 : 1406
 
 // priority_queue를 사용할때 greater를 쓰기 위해선 functional 헤더를 include 할것
 // stack 문제(2493 탑 같은 문제)의 경우, 시간초과가 날 수 있으니, printf, scanf를 활용하자
