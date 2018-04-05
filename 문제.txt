@@ -2,7 +2,7 @@
 bfs : 7569, 2589
 플로이드-마샬 : 1389
 LIS : 1937
-dp : 1937, 1890
+dp : 1937, 1890, 1915
 문자열 : 10988
 수학 : 4504
 힙 : 1927
@@ -13,6 +13,6 @@ stack : 2493
 이분탐색 : 1654
 etc : 10451, 14647
 
-// priority_queue를 사용할때 greater를 쓰기 위해선 functional 헤더를 include 할것
+// priority_queue를 사용할때 greater를 쓰기 위해선 functional 헤더를 include 할것 (http://koosaga.com/9)
 // stack 문제(2493 탑 같은 문제)의 경우, 시간초과가 날 수 있으니, printf, scanf를 활용하자
 // INT_MAX 쓰려면 limits.h 헤더를 include 할 것
