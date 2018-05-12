@@ -1,60 +1,49 @@
-#include<iostream>
+#include <iostream>
+#include <algorithm>
+#include <cstring>
 using namespace std;
 
 int N;
-long long W[17][17] = { 0, };
-int bits = 1;
-int cur_city = 0;
-long long DP[65537] = { 0, };
+int arr[16][16];
+int ans[16][1 << 16];
+const int INF = 999999999;
 
-void dfs(int bis, int cur, long long prev_cost, int cnt);
+int func(int v, int cur);
 
 int main() {
-	cin >> N;
+	memset(ans, -1, sizeof(ans));
+	scanf("%d",&N);
 
 	for (int i = 0; i < N; i++) {
 		for (int j = 0; j < N; j++) {
-			cin >> W[i][j];
+			scanf("%d", &arr[i][j]);
 		}
 	}
 
-	dfs(bits, cur_city, 0, 1);
-
-	int t = (1 << N) - 1;
-	cout << DP[t] << endl;
+	printf("%d\n", func(1, 0));
 
 	return 0;
 }
 
-void dfs(int bis, int cur, long long prev_cost, int cnt) {
-	int temp = bis;
-	int temp2;
-
-	if (cnt == N) {
-		if (W[cur][0] == 0) {
-			return;
-		}
-		if (DP[(1 << N)] != 0) {
-			if (DP[(1 << N)] < prev_cost + W[cur][0]) {
-				return;
-			}
-		}
-		DP[(1 << N)] = prev_cost + W[cur][0];
-		return;
+int func(int v, int cur) {
+	if (v == (1 << N) - 1) {
+		if (arr[cur][0] != 0)
+			return arr[cur][0];
+		return INF;
 	}
 
-	for (int i = 0; i < N; i++, temp = temp >> 1) {
-		temp2 = bis;
-		if ((temp & 1) != 1 && W[cur][i] != 0) {
-			int t = 1 << i;
-			temp2 |= t;
-			if (DP[temp2] != 0) {
-				if (DP[temp2] < prev_cost + W[cur][i]) {
-					return;
-				}
-			}
-			DP[temp2] = prev_cost + W[cur][i];
-			dfs(temp2, i, DP[temp2], cnt + 1);
-		}
+	if (ans[cur][v] != -1) {
+		return ans[cur][v];
 	}
+
+	int ret = INF;
+
+	for (int i = 0; i < N; i++) {
+		if (v & (1 << i) || arr[cur][i] == 0)
+			continue;
+
+		ret = min(ret, arr[cur][i] + func(v + (1 << i), i));
+	}
+
+	return ret;
 }
