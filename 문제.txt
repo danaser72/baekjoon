@@ -2,7 +2,7 @@
 bfs : 7569, 2589
 플로이드-마샬 : 1389
 LIS : 1937
-dp : 1937, 1890, 1915, 2098, 14728
+dp : 1937, 1890, 1915, 2098, 14728, 11054
 문자열 : 10988
 수학 : 4504
 힙 : 1927
@@ -19,8 +19,10 @@ etc : 10451, 14647
 최대공약수 : 2981
 순열 : 10974
 배낭 문제 : 14728
+etc : 14731
 
 // priority_queue를 사용할때 greater를 쓰기 위해선 functional 헤더를 include 할것 (http://koosaga.com/9)
 // stack 문제(2493 탑 같은 문제)의 경우, 시간초과가 날 수 있으니, printf, scanf를 활용하자
 // INT_MAX 쓰려면 limits.h 헤더를 include 할 것
 // 2098 이해할 수 없는 문제, http://jaimemin.tistory.com/464 참고
+// not solving - 14731, 1915

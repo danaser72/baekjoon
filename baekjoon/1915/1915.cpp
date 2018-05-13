@@ -1,79 +1,57 @@
 #include <iostream>
-#include <functional>
 #include <queue>
 using namespace std;
 
-typedef struct dp {
-	int x;
-	int y;
-	int len;
-}DP;
-
-struct cmp {
-	bool operator ()(DP a, DP b) {
-		return a.len < b.len;
-	}
-};
-
-int MAX = 0;
 int n, m;
-char arr[1002][1002] = { 0, };
-priority_queue<DP, vector<DP>, cmp> pq;
+char arr[1004][1004] = { 0, };
+int MAX = 0;
+queue<pair<int, int>> q;
 
 int main() {
-	scanf("%d%d", &n, &m);
+	//cin >> n >> m;
+	scanf("%d%d", &m, &n);
 
 	for (int i = 0; i < n; i++) {
-		int cnt = 0;
-		DP newDP;
 		for (int j = 0; j < m; j++) {
-			char t;
-			cin >> t;
-			arr[i][j] = t;
+			//cin >> arr[i][j];
+			scanf("%1d", &arr[i][j]);
 
-			if (t == '1') {
-				if (cnt == 0) {
-					newDP.x = i;
-					newDP.y = j;
-				}
-				cnt++;
-
-				if (j == m - 1) {
-					newDP.len = cnt;
-					pq.push(newDP);
-				}
-			}
-			else if (t == '0' && cnt != 0) {
-				newDP.len = cnt;
-				pq.push(newDP);
-				cnt = 0;
+			if (arr[i][j] == 1) {
+				q.push({ i,j });
 			}
 		}
 	}
 
-	bool chk = false;
+	while (!q.empty()) {
+		int x = q.front().first, y = q.front().second;
+		q.pop();
+		int dist = n - x > n - y ? n - x : n - y;
 
-	while (!pq.empty() && !chk) {
-		int x = pq.top().x, y = pq.top().y, len = pq.top().len;
-		int val = 0;
-		pq.pop();
-
-		for (int k = 0; k < len; k++) {
-			for (int i = x; i < x + len && !chk; i++) {
-				for (int j = y; j < y + len && !chk; j++) {
-					if (arr[i][j] == '0')
-						chk != chk;
+		for (int k = 0; k < dist; k++) {
+			bool chk = false;
+			for (int i = x; i <= x + k + 1; i++) {
+				if (arr[i][y + k + 1] != 1) {
+					chk = true;
+					break;
 				}
 			}
-		}
-		
-		chk != chk;
+			if (!chk) {
+				for (int i = y; i <= y + k + 1; i++) {
+					if (arr[x + k + 1][i] != 1) {
+						chk = true;
+						break;
+					}
+				}
+			}
 
-		if (chk)
-			MAX = val;
+			if (chk) {
+				MAX = (k + 1) > MAX ? (k + 1) : MAX;
+				break;
+			}
+		}
 	}
 
-	printf("%d\n", MAX*MAX);
+	cout << MAX * MAX << endl;
 
 	return 0;
 }
