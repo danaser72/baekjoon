@@ -1,44 +1,33 @@
 #include <iostream>
-#include <algorithm>
 using namespace std;
 
-int N;
-int arr[1002] = { 0, };
-int dp1[1002] = { 0, };
-int dp2[1002] = { 0, };
+int n, m;
+char arr[1005][1005];
+int dp[1002][1002] = { 0, };
 int MAX = 0;
 
 int main() {
-	cin >> N;
+	cin >> n >> m;
 
-	for (int i = 0; i < N; i++) {
-		cin >> arr[i];
+	int cnt = 0;
 
-		for (int j = 0; j < i; j++) {
-			if (arr[i] > arr[j]) {
-				dp1[i] = dp1[j] + 1 > dp1[i] ? dp1[j] + 1 : dp1[i];
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= m; j++) {
+			cin >> arr[i][j];
+
+			if (arr[i][j] == '1') {
+				int a = dp[i][j - 1] < dp[i - 1][j] ? dp[i][j - 1] : dp[i - 1][j];
+
+				a = a < dp[i - 1][j - 1] ? a : dp[i - 1][j - 1];
+
+				dp[i][j] = a + 1;
+
+				MAX = dp[i][j] > MAX ? dp[i][j] : MAX;
 			}
 		}
-		if (dp1[i] == 0)
-			dp1[i] = 1;
 	}
 
-	for (int i = N - 1; i >= 0; i--) {
-		for (int j = N - 1; j > i; j--) {
-			if (arr[i] > arr[j]) {
-				dp2[i] = dp2[j] + 1 > dp2[i] ? dp2[j] + 1 : dp2[i];
-			}
-		}
-		if (dp2[i] == 0)
-			dp2[i] = 1;
-	}
-
-	for (int i = 0; i < N; i++) {
-		if (dp1[i] + dp2[i] > MAX)
-			MAX = dp1[i] + dp2[i];
-	}
-
-	cout << MAX - 1 << endl;
+	cout << MAX * MAX << endl;
 
 	return 0;
 }
