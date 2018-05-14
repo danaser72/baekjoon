@@ -1,49 +1,55 @@
 #include <iostream>
-#include <algorithm>
-#include <cstring>
 using namespace std;
 
 int N;
-int arr[16][16];
-int ans[16][1 << 16];
-const int INF = 999999999;
+int W[17][17] = { 0, };
+int DP[17][1 << 16] = { 0, };
+int INF = 987654321;
 
-int func(int v, int cur);
+int func(int city, int cnt);
 
 int main() {
-	memset(ans, -1, sizeof(ans));
-	scanf("%d",&N);
+	cin >> N;
+//	scanf("%d", &N);
 
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
-			scanf("%d", &arr[i][j]);
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= N; j++) {
+			cin >> W[i][j];
+			//scanf("%d", &W[i][j]);
 		}
 	}
 
-	printf("%d\n", func(1, 0));
+	cout << func(1, 1) << endl;
 
 	return 0;
 }
 
-int func(int v, int cur) {
-	if (v == (1 << N) - 1) {
-		if (arr[cur][0] != 0)
-			return arr[cur][0];
+int func(int city, int cnt) {
+	if (cnt == (1 << N) - 1) {
+		if (W[city][1] != 0) {
+			return W[city][1];
+		}
 		return INF;
 	}
 
-	if (ans[cur][v] != -1) {
-		return ans[cur][v];
+	if (DP[city][cnt] != 0) {
+		return DP[city][cnt];
 	}
 
 	int ret = INF;
 
-	for (int i = 0; i < N; i++) {
-		if (v & (1 << i) || arr[cur][i] == 0)
+	for (int i = 2; i <= N; i++) {
+		if (cnt & (1 << i - 1) || W[city][i] == 0){
 			continue;
+		}
 
-		ret = min(ret, arr[cur][i] + func(v + (1 << i), i));
+		int t = W[city][i] + func(i, cnt + (1 << i - 1));
+
+		ret = t < ret ? t : ret;
 	}
+
+	DP[city][cnt] = ret;
+	// 추가하지 않아서 시간초과가 된 문장
 
 	return ret;
 }
