@@ -3,100 +3,77 @@
 #include <vector>
 using namespace std;
 
-int N;
-int dp[53][53];
-int MOVE[4][2] = { { 1,0 },{ 0,1 },{ -1,0 },{ 0,-1 } };
+struct node {
+	int x;
+	int y;
+	int cnt;
+};
 
-void func(queue<pair<int, int>> q, vector<vector<char>> map);
+int MOVE[4][2] = { { 1,0 },{ 0,1 },{ -1,0 },{ 0,-1 } };
+int N;
+
+void func(queue<node> q);
+vector<vector<char>> v;
+
+
+int cache[52][52] = { 0, };
 
 int main() {
-	vector<vector<char>> map;
-	cin >> N;
+	scanf("%d", &N);
+
+	node newNode;
 
 	for (int i = 0; i < N; i++) {
 		vector<char> element;
 		for (int j = 0; j < N; j++) {
-			char temp;
-			cin >> temp;
-			element.push_back(temp);
+			char t;
+			scanf(" %c", &t);
 
-			dp[i][j] = -1;
+			element.push_back(t);
+			cache[i][j] = 987654321;
 		}
-		map.push_back(element);
+		v.push_back(element);
 	}
 
-	queue<pair<int, int>> q;
+	newNode.x = 0;
+	newNode.y = 0;
+	newNode.cnt = 0;
 
-	dp[0][0] = 0;
-	q.push({ 0,0 });
-	func(q, map);
+	queue<node> q;
+	q.push(newNode);
 
-	cout << dp[N - 1][N - 1] << endl;;
+	func(q);
+
+	//cout << cache[N - 1][N - 1] << endl;
+	printf("%d\n", cache[N - 1][N - 1]);
 
 	return 0;
 }
 
-void func(queue<pair<int, int>> q, vector<vector<char>> map) {
+void func(queue<node> q) {
 	while (!q.empty()) {
-		int x = q.front().first, y = q.front().second;
+		int x = q.front().x;
+		int y = q.front().y;
+		int cnt = q.front().cnt;
+
 		q.pop();
 
-		for (int i = 0; i < 4; i++) {
-			int n = x + MOVE[i][0], m = y + MOVE[i][1];
+		if (cnt < cache[x][y]) {
+			cache[x][y] = cnt;
 
-			if (n >= 0 && n < N && m >= 0 && m < N) {
-				if (map[n][m] == '0') {
-					map[n][m] = '2';
-					q.push({ n,m });
+			for (int i = 0; i < 4; i++) {
+				int n = x + MOVE[i][0], m = y + MOVE[i][1];
 
-					int t1, t2;
-					for (int j = 0; j < 4; j++) {
-						int t1 = n + MOVE[j][0], t2 = m + MOVE[j][1];
-
-						if (t1 >= 0 && t1 < N && t2 >= 0 && t2 < N) {
-							if (dp[t1][t2] != -1) {
-								if (dp[n][m] != -1) {
-									dp[n][m] = dp[t1][t2] + 1 < dp[n][m] ? dp[t1][t2] + 1 : dp[n][m];
-								}
-								else {
-									dp[n][m] = dp[t1][t2] + 1;
-								}
-							}
-						}
+				if (n >= 0 && n < N && m >= 0 && m < N) {
+					node newNode;
+					newNode.x = n;
+					newNode.y = m;
+					newNode.cnt = cnt;
+					if (v[n][m] == '0') {
+						newNode.cnt++;
 					}
 
-					/*if (dp[n][m] != -1) {
-						dp[n][m] = dp[x][y] + 1 < dp[n][m] ? dp[x][y] + 1 : dp[n][m];
-					}
-					else {
-						dp[n][m] = dp[x][y] + 1;
-					}*/
-				}
-				else if (map[n][m] == '1') {
-					map[n][m] = '2';
-					q.push({ n,m });
-
-					int t1, t2;
-					for (int j = 0; j < 4; j++) {
-						int t1 = n + MOVE[j][0], t2 = m + MOVE[j][1];
-
-						if (t1 >= 0 && t1 < N && t2 >= 0 && t2 < N) {
-							if (dp[t1][t2] != -1) {
-								if (dp[n][m] != -1) {
-									dp[n][m] = dp[t1][t2] + 1 < dp[n][m] ? dp[t1][t2] + 1 : dp[n][m];
-								}
-								else {
-									dp[n][m] = dp[t1][t2];
-								}
-							}
-						}
-					}
-					/*if (dp[n][m] != -1) {
-						dp[n][m] = dp[x][y] < dp[n][m] ? dp[x][y] : dp[n][m];
-					}
-					else {
-						dp[n][m] = dp[x][y];
-					}*/
+					q.push(newNode);
 				}
 			}
 		}
